@@ -24,17 +24,17 @@ import android.util.Log;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
- 
+
 public class CordovaHttpGet extends CordovaHttp implements Runnable {
     public CordovaHttpGet(String urlString, Map<?, ?> params, Map<String, String> headers, CallbackContext callbackContext) {
         super(urlString, params, headers, callbackContext);
     }
-    
+
     @Override
     public void run() {
         try {
             HttpRequest request = HttpRequest.get(this.getUrlString(), this.getParams(), false);
-            //this.setupSecurity(request);
+            this.setupSecurity(request);
             request.acceptCharset(CHARSET);
             request.headers(this.getHeaders());
             int code = request.code();
@@ -46,7 +46,7 @@ public class CordovaHttpGet extends CordovaHttp implements Runnable {
                 response.put("data", body);
                 this.getCallbackContext().success(response);
             } else {
-                response.put("error!", body);
+                response.put("error", body);
                 this.getCallbackContext().error(response);
             }
         } catch (JSONException e) {
@@ -57,7 +57,7 @@ public class CordovaHttpGet extends CordovaHttp implements Runnable {
             } else if (e.getCause() instanceof SSLHandshakeException) {
                 this.respondWithError("SSL handshake failed");
             } else {
-                this.respondWithError("There was an error with the request " + e.getMessage() + e.getCause());
+                this.respondWithError("There was an error with the request " + e.getMessage() + " - " + e.getCause());
             }
         }
     }
