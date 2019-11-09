@@ -303,7 +303,7 @@ public class HttpRequest {
         }
       } };
       try {
-        SSLContext context = SSLContext.getInstance("TLS");
+        SSLContext context = SSLContext.getInstance("SSL");
         context.init(null, trustAllCerts, new SecureRandom());
         
         if (android.os.Build.VERSION.SDK_INT < 20) {
